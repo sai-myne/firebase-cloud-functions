@@ -77,5 +77,26 @@ exports.upvote = functions.region('asia-southeast2').https.onCall(async (data, c
     return request.update({
         upvotes: admin.firestore.FieldValue.increment(1)
     });
-})
+});
+
+// firestore trigger for tracking activity
+exports.logActivities = functions.region('asia-southeast2').firestore.document('/{collection}/{id}')
+    .onCreate((snap, context) => {
+        console.log(snap.data());
+
+        const collection = context.params.collection;
+        const id = context.params.id;
+
+        const activities = admin.firestore().collection('activities');
+
+        if(collection === 'requests') {
+            return activities.add({ text: 'a new tutorial request was added' });
+        }
+        if(collection === 'users') {
+            return activities.add({ text: 'a new user signed up' });
+        }
+
+        return null;
+
+    })
 
