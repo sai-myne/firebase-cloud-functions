@@ -8,7 +8,7 @@ var app = new Vue({
             const upvote = firebase.app().functions('asia-southeast2').httpsCallable('upvote');
             upvote({ id })
                 .catch(error => {
-                    console.log(error.message);
+                    showNotification(error.message);
                 });
         }
     },
