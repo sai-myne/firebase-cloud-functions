@@ -3,8 +3,17 @@ var app = new Vue({
     data: {
         requests: []
     },
+    methods: {
+        upvoteRequest(id){
+            const upvote = firebase.app().functions('asia-southeast2').httpsCallable('upvote');
+            upvote({ id })
+                .catch(error => {
+                    console.log(error.message);
+                });
+        }
+    },
     mounted(){
-        const ref = firebase.firestore().collection('requests');
+        const ref = firebase.firestore().collection('requests').orderBy('upvotes', 'desc');
         ref.onSnapshot(snapshot => {
             let requests = [];
             snapshot.forEach(doc => {

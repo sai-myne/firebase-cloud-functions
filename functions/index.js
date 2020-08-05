@@ -52,7 +52,7 @@ exports.upvote = functions.region('asia-southeast2').https.onCall((data, context
     if(!context.auth){
         throw new functions.https.HttpsError(
             'unauthenticated',
-            'only authenticated users can add requests'
+            'only authenticated users can vote up requests'
         );
     }
     // get refs for user doc & request doc
@@ -64,7 +64,7 @@ exports.upvote = functions.region('asia-southeast2').https.onCall((data, context
         if(doc.data().upvoteOn.includes(data.id)){
             throw new functions.https.HttpsError(
                 'failed-precondition',
-                'You can only upvote something once'
+                'You can only upvote something up once'
             );
         }
 
@@ -75,7 +75,7 @@ exports.upvote = functions.region('asia-southeast2').https.onCall((data, context
         .then(() => {
             // update votes on the request
             return request.update({
-                upvotes: admin.firestore().FieldValue.increment(1)
+                upvotes: admin.firestore.FieldValue.increment(1)
             })
         })
     })
